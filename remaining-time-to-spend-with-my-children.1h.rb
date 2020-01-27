@@ -128,15 +128,16 @@ module BitBar
 
     class View
       TEMPLATE = <<-EOT.gsub(/^ */, '')
-        <%= @children[0].label %><%= @children[0].remaining_days %> days | font=courier color=black
+        <%= @children[0].label %><%= @children[0].remaining_days %> days | font=courier color=<%= @text_color %>
         ---
         <% @children.each do |children| -%>
-        <%= children.label %> <%= children.remaining_days %> days (<%= children.remaining_hours %> hours) | font=courier color=black
+        <%= children.label %> <%= children.remaining_days %> days (<%= children.remaining_hours %> hours) | font=courier color=<%= @text_color %>
         <% end -%>
       EOT
 
-      def initialize(children:)
+      def initialize(children:, text_color:)
         @children = children
+        @text_color = text_color
       end
 
       def render
@@ -145,7 +146,7 @@ module BitBar
     end
 
     class App
-      DEFAULT_CONFIG = {}.freeze
+      DEFAULT_CONFIG = { text_color: 'black' }.freeze
 
       def initialize(config = {})
         @config = cast_config(DEFAULT_CONFIG.merge(config))
@@ -154,7 +155,9 @@ module BitBar
       def run
         children = Children.from(@config.fetch(:children), options: @config)
 
-        View.new(children: children).render
+        text_color = @config.fetch(:text_color)
+
+        View.new(children: children, text_color: text_color).render
       end
 
       private
@@ -213,24 +216,24 @@ if __FILE__ == $0
     puts <<-EOM.gsub(/^ */, '')
       ⚠️
       ---
-      To setup, create or edit your ~/.bitbarrc file with a new section, like: | color=black
+      To setup, create or edit your ~/.bitbarrc file with a new section, like:
       |
       [remaining_time_to_spend_with_my_children] | font=courier color=black
-      ;# Required                                           | font=courier color=black
-      child_identifiers       = child0,child1               | font=courier color=black
-      child0_label            = ":girl:"                    | font=courier color=black
-      child0_birthday         = "2017-04-05+09:00"          | font=courier color=black
-      child0_independence_day = "2035-04-01+09:00"          | font=courier color=black
-      child1_label            = ":boy:"                     | font=courier color=black
-      child1_birthday         = "2019-04-05+09:00"          | font=courier color=black
-      child1_independence_day = "2037-04-01+09:00"          | font=courier color=black
+      ;# Required                                           | font=courier
+      child_identifiers       = child0,child1               | font=courier
+      child0_label            = ":girl:"                    | font=courier
+      child0_birthday         = "2017-04-05+09:00"          | font=courier
+      child0_independence_day = "2035-04-01+09:00"          | font=courier
+      child1_label            = ":boy:"                     | font=courier
+      child1_birthday         = "2019-04-05+09:00"          | font=courier
+      child1_independence_day = "2037-04-01+09:00"          | font=courier
       |
-      ;# Optional                                           | font=courier color=black
-      hours_a_day_during_infant             = 5             | font=courier color=black
-      hours_a_day_during_elementary         = 5             | font=courier color=black
-      hours_a_day_during_junior_high_school = 3             | font=courier color=black
-      hours_a_day_during_high_school        = 2             | font=courier color=black
-      hours_a_day_during_college_or_later   = 2             | font=courier color=black
+      ;# Optional                                           | font=courier
+      hours_a_day_during_infant             = 5             | font=courier
+      hours_a_day_during_elementary         = 5             | font=courier
+      hours_a_day_during_junior_high_school = 3             | font=courier
+      hours_a_day_during_high_school        = 2             | font=courier
+      hours_a_day_during_college_or_later   = 2             | font=courier
     EOM
   rescue BitBar::RemainingTimeToSpendWithMyChildren::ConfigurationError => e
     puts <<-EOM.gsub(/^ */, '')

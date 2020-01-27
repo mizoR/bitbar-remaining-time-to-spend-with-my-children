@@ -28,4 +28,7 @@ hours_a_day_during_elementary         = 6
 hours_a_day_during_junior_high_school = 4
 hours_a_day_during_high_school        = 3
 hours_a_day_during_college_or_later   = 2
+
+;# You can customize text color - (Default: black)
+text_color = "white"
 ```
