@@ -115,7 +115,7 @@ module BitBar
         t = (h - [j, today].max).to_i
         hours += t * hours_a_day_during_high_school if t > 0
 
-        t = (independence_day - [j, today].max).to_i
+        t = (independence_day - [h, today].max).to_i
         hours += t * hours_a_day_during_college_or_later if t > 0
 
         hours
