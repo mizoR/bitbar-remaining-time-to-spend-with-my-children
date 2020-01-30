@@ -13,7 +13,7 @@ module BitBar
     def self.load(file = "#{ENV['HOME']}/.bitbarrc", base: {})
       raise INIFileNotFound if !File.exist?(file)
 
-      parse(open(file) { |f| f.read })
+      parse(open(file, 'r:UTF-8') { |f| f.read })
     end
 
     def self.parse(source)
